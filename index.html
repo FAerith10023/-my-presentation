@@ -281,6 +281,16 @@
                 backgroundTransition: 'fade',
 				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
 			});
+			 // 添加鼠标点击跳转下一页的功能
+			Reveal.on('ready', event => {
+				document.querySelector('.reveal').addEventListener('click', (e) => {
+					// 如果点击的目标是链接(A)、按钮(BUTTON)或图片(IMG)，则不执行跳转
+					if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || e.target.tagName === 'IMG') {
+						return;
+					}
+					Reveal.next();
+				}, false);
+			});
 		</script>
 	</body>
 </html>
