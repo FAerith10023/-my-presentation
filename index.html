@@ -4,13 +4,11 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>个人成长报告 (动态版)</title>
+		<title>个人成长报告 (粒子特效版)</title>
 
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.css" id="theme">
-
-		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/monokai.min.css">
 
         <style>
@@ -23,85 +21,70 @@
                 --r-link-color: #007bff;
                 --r-link-color-hover: #0056b3;
                 --r-selection-background-color: #007bff;
-                --r-background-color: #fff; /* 将幻灯片背景设为白色以突出内容 */
+                --r-background-color: #fff; /* 幻灯片背景设为白色，确保内容清晰 */
             }
 
-            /* --- 2. 新增：动态渐变背景 --- */
             body {
-                background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-                background-size: 400% 400%;
-                animation: gradientBG 15s ease infinite;
+                /* 为粒子背景设置一个深色底色，增强对比 */
+                background-color: #0d1117;
             }
 
-            @keyframes gradientBG {
-                0% { background-position: 0% 50%; }
-                50% { background-position: 100% 50%; }
-                100% { background-position: 0% 50%; }
+            /* --- 2. 新增：粒子背景容器样式 --- */
+            #tsparticles {
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                z-index: 1; /* 将粒子背景置于内容之下 */
             }
-            
-            /* --- 3. 新增：左上角 Logo --- */
+
+            /* --- 3. 更新：Logo 与内容层级 --- */
             .logo {
                 position: fixed;
                 top: 30px;
                 left: 30px;
-                z-index: 100; /* 确保Logo在最上层 */
+                z-index: 100; /* Logo层级最高 */
             }
             .logo img {
-                height: 40px; /* 调整为适合演示的高度 */
-                width: auto;  /* 保持宽高比 */
+                height: 35px; /* 根据新Logo比例微调高度 */
+                width: auto;
+            }
+
+            .reveal {
+                 z-index: 10; /* 确保PPT内容在粒子背景之上 */
+                 background: transparent !important; /* 使 reveal 容器透明 */
             }
 
             .reveal .slides {
-                border-radius: 15px; /* 为幻灯片区域增加圆角，更显精致 */
+                border-radius: 15px;
                 box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             }
 
             .reveal .slides section {
-                text-align: left; /* 内容默认左对齐 */
+                text-align: left;
                 background: var(--r-background-color);
             }
             
             .reveal h1, .reveal h2, .reveal h3 {
-                text-align: center; /* 标题居中 */
+                text-align: center;
                 font-weight: 600;
             }
 
-            /* --- 4. 新增：标题图形动画 (下划线展开) --- */
+            /* --- 4. 标题图形动画 (下划线展开) --- */
             .reveal .slides section.present h2::after {
-                content: '';
-                display: block;
-                width: 80px;
-                height: 4px;
-                background: var(--r-link-color);
-                margin: 20px auto 0;
-                transform: scaleX(0);
-                transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-                transform-origin: center;
-                /* 延迟触发，让标题先显示 */
-                transition-delay: 0.2s; 
+                content: ''; display: block; width: 80px; height: 4px;
+                background: var(--r-link-color); margin: 20px auto 0;
+                transform: scaleX(0); transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+                transform-origin: center; transition-delay: 0.2s; 
             }
-            .reveal .slides section.present.has-dark-background h2::after{
-                background: #fff;
-            }
-            /* 当幻灯片可见时触发动画 */
-            .reveal .slides section.present h2.ready::after {
-                 transform: scaleX(1);
-            }
-            /* 赋予动画触发钩子 */
-            .reveal h2 {
-                transition: all 0.3s ease-in-out;
-            }
+            .reveal .slides section.present.has-dark-background h2::after{ background: #fff; }
+            .reveal .slides section.present h2.ready::after { transform: scaleX(1); }
+            .reveal h2 { transition: all 0.3s ease-in-out; }
             
-            /* 优化fragment动画，使其更平滑 */
+            /* 优化fragment动画 */
             .reveal .slides section .fragment.fade-in-then-semi-out {
-                opacity: 1;
-                transition: opacity .4s ease-in-out;
-            }
-            .reveal .slides section .fragment.fade-in-then-semi-out.visible {
-                opacity: 1;
-            }
-            .reveal .slides section .fragment.fade-in-then-semi-out.current-fragment {
-                opacity: 1;
+                opacity: 1; transition: opacity .4s ease-in-out;
             }
             .reveal .slides section .fragment.fade-in-then-semi-out:not(.current-fragment) {
                 opacity: 0.25;
@@ -110,9 +93,11 @@
 
 	</head>
 	<body>
-        <!-- Logo 放置在这里，独立于幻灯片 -->
+        <!-- 粒子背景容器 -->
+        <div id="tsparticles"></div>
+
+        <!-- 更新后的 Logo -->
         <div class="logo">
-            <!-- 请将下面的 src 替换为您自己的Logo图片地址 -->
             <img src="https://www.zj-tuna.com/tpl/v1/cn/static/images/logo.png" alt="Company Logo">
         </div>
 
@@ -186,17 +171,13 @@
 							<div class="fragment fade-left" style="width: 48%;">
 								<h4>硬技能</h4>
 								<ul>
-									<li>行业政策理解</li>
-                                    <li>技术能力分析</li>
-                                    <li>采购信息研判</li>
+									<li>行业政策理解</li><li>技术能力分析</li><li>采购信息研判</li>
 								</ul>
 							</div>
 							<div class="fragment fade-right" style="width: 48%;">
 								<h4>软技能</h4>
 								<ul>
-									<li>沟通协调效率</li>
-									<li>项目抗压能力</li>
-									<li>时间管理能力</li>
+									<li>沟通协调效率</li><li>项目抗压能力</li><li>时间管理能力</li>
 								</ul>
 							</div>
 						</div>
@@ -241,38 +222,107 @@
 			</div>
 		</div>
 
+        <!-- 引入 tsParticles 库 -->
+        <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+
+        <!-- 引入 Reveal.js 核心库与插件 -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/notes/notes.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/markdown/markdown.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/highlight.js"></script>
-		<script>
+		
+        <script>
+            // --- A. 初始化粒子背景 ---
+            tsParticles.load("tsparticles", {
+                fpsLimit: 60,
+                interactivity: {
+                    events: {
+                        onHover: {
+                            enable: true,
+                            mode: "grab"
+                        },
+                        onClick: {
+                            enable: true,
+                            mode: "push"
+                        },
+                        resize: true
+                    },
+                    modes: {
+                        grab: {
+                            distance: 140,
+                            line_linked: {
+                                opacity: 1
+                            }
+                        },
+                        push: {
+                            particles_nb: 4
+                        }
+                    }
+                },
+                particles: {
+                    number: {
+                        value: 80,
+                        density: {
+                            enable: true,
+                            value_area: 800
+                        }
+                    },
+                    color: {
+                        value: "#ffffff"
+                    },
+                    shape: {
+                        type: "circle"
+                    },
+                    opacity: {
+                        value: 0.5,
+                        random: false
+                    },
+                    size: {
+                        value: 3,
+                        random: true
+                    },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: "#ffffff",
+                        opacity: 0.4,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: "none",
+                        random: false,
+                        straight: false,
+                        out_mode: "out",
+                        attract: {
+                            enable: false
+                        }
+                    }
+                },
+                detectRetina: true,
+            });
+
+
+			// --- B. 初始化 Reveal.js 演示文稿 ---
 			let deck = new Reveal({
 				hash: true,
-                slideNumber: 'c/t', // 显示页码 (当前页/总页数)
-                transition: 'slide', // 默认过渡效果
-                transitionSpeed: 'fast', // 过渡速度
-                backgroundTransition: 'fade', // 背景过渡效果
+                slideNumber: 'c/t',
+                transition: 'slide',
+                transitionSpeed: 'fast',
+                backgroundTransition: 'fade',
 				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
 			})
 			deck.initialize().then(() => {
-                // 自定义事件：当h2标题进入视窗时，给它添加一个class以触发动画
                 deck.on('slidechanged', event => {
-                    // event.previousSlide, event.currentSlide, event.indexh, event.indexv
-                    let currentSlide = event.currentSlide;
-                    let title = currentSlide.querySelector('h2');
+                    let title = event.currentSlide.querySelector('h2');
                     if (title && !title.classList.contains('ready')) {
-                         setTimeout(() => {
-                             title.classList.add('ready');
-                         }, 100);
+                         setTimeout(() => { title.classList.add('ready'); }, 100);
                     }
                 });
-                
-                // 确保第一页的动画也能触发
                 let firstTitle = deck.getCurrentSlide().querySelector('h2');
                 if(firstTitle) {
-                     setTimeout(() => {
-                        firstTitle.classList.add('ready');
-                    }, 100);
+                     setTimeout(() => { firstTitle.classList.add('ready'); }, 100);
                 }
             });
 		</script>
